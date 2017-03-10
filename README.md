@@ -1,9 +1,8 @@
 
+Basic concept:
 
-Join the cluster, see http://basho.com/posts/technical/running-riak-in-docker/
+Jupyter with local vagrant riak server.
 
+Join the office riak master node to get access to loads of data.
 
-    docker run --name=riak -d -p 8087:8087 -p 8098:8098 basho/riak-kv
-
-
-
+http://localhost:8089/admin

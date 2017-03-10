@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: add basho key
+      apt_key:
+        url: https://packagecloud.io/gpg.key
+        state: present
+    - name: Add Basho repository
+      apt_repository:
+        repo: deb https://packagecloud.io/basho/riak/ubuntu/ xenial main
+        state: present
+    - name: Install riak
+      apt:
+        name: riak
+        update_cache: yes
+        state: present
+    - name: Update riak configuration to include console
+      replace:
+        dest: /etc/riak/riak.conf
+        regexp: '^riak_control .*$'
+        replace: 'riak_control = on'
+    - name: Open up the web interface to everybody
+      replace:
+          dest: /etc/riak/riak.conf
+          regexp: '^listener.http.internal .*$'
+          replace: 'listener.http.internal = 0.0.0.0:8089'
+    - name: Open up the protobuf interface to everybody
+      replace:
+          dest: /etc/riak/riak.conf
+          regexp: '^listener.protobuf.internal .*$'
+          replace: 'listener.protobuf.internal = 0.0.0.0:8089'
+    - name: Start riak
+      service:
+        name: riak
+        state: started
+      # - replace:
+      #     path: /etc/riak/riak.conf
+      #     regexp: '^listener.http.internal .*$'
+      #     replace: 'listener.http.internal = 0.0.0.0:'
